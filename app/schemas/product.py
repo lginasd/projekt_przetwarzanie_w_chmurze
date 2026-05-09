@@ -1,7 +1,4 @@
 from pydantic import BaseModel, Field
-from sqlalchemy.orm import Session
-
-from app.models.product import Product
 
 
 class ProductCreate(BaseModel):
@@ -16,3 +13,8 @@ class ProductResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class ProductUpdate(BaseModel):
+    name: str
+    price: float = Field(gt=0)
