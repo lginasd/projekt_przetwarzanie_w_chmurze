@@ -9,24 +9,10 @@ class ProductCreate(BaseModel):
     price: float = Field(gt=0)
 
 
-def create_product(db: Session, name: str, price: float):
-    product = Product(
-        name=name,
-        price=price
-    )
+class ProductResponse(BaseModel):
+    id: int
+    name: str
+    price: float
 
-    db.add(product)
-    db.commit()
-    db.refresh(product)
-
-    return product
-
-
-def get_products(db: Session):
-    return db.query(Product).all()
-
-
-def get_product(db: Session, product_id: int):
-    return db.query(Product).filter(
-        Product.id == product_id
-    ).first()
+    class Config:
+        from_attributes = True
