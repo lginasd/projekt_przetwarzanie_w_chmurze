@@ -1,0 +1,31 @@
+from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy.orm import relationship
+
+from app.database import DataBase
+
+class User(DataBase):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True)
+
+    email = Column(
+        String,
+        unique=True,
+        nullable=False
+    )
+
+    hashed_password = Column(
+        String,
+        nullable=False
+    )
+
+    is_admin = Column(
+        Boolean,
+        default=False,
+        nullable=False
+    )
+
+    orders = relationship(
+        "Order",
+        back_populates="user"
+    )
