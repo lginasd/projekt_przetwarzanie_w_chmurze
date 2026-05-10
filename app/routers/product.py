@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 
+from app.models.user import User
 from app.schemas.product import ProductCreate, ProductResponse, ProductUpdate
+from app.services.auth import get_current_admin
 from app.services.product import get_products, get_product, create_product, delete_product, update_product
 
 
@@ -14,14 +16,27 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get(
+    "/",
+    status_code=200,
+    response_model=list[ProductResponse]
+)
 def read_products(
     db: Session = Depends(get_db)
 ):
     return get_products(db)
 
 
-@router.get("/{product_id}")
+@router.get(
+    "/{product_id}",
+    status_code=200,
+    response_model=ProductResponse,
+    responses={
+        404: {
+            "description": "Product not found"
+        }
+    }
+)
 def read_product(
     product_id: int,
     db: Session = Depends(get_db)
@@ -40,10 +55,22 @@ def read_product(
 @router.post(
     "/",
     response_model=ProductResponse,
-    status_code=201
+    status_code=201,
+    responses={
+        401: {
+            "detail": "Unauthorised"
+        },
+        403: {
+            "detail": "Permission denied"
+        },
+        404: {
+            "detail": "Product not found"
+        }
+    }
 )
 def add_product(
     product: ProductCreate,
+    _: User = Depends(get_current_admin),
     db: Session = Depends(get_db)
 ):
     return create_product(
@@ -56,11 +83,24 @@ def add_product(
 
 @router.put(
     "/{product_id}",
-    response_model=ProductResponse
+    status_code=200,
+    response_model=ProductResponse,
+    responses={
+        401: {
+            "detail": "Unauthorised"
+        },
+        403: {
+            "detail": "Permission denied"
+        },
+        404: {
+            "detail": "Product not found"
+        }
+    }
 )
 def edit_product(
     product_id: int,
     updated_product: ProductUpdate,
+    _: User = Depends(get_current_admin),
     db: Session = Depends(get_db)
 ):
     product = update_product(
@@ -81,10 +121,22 @@ def edit_product(
 
 @router.delete(
     "/{product_id}",
-    status_code=204
+    status_code=204,
+    responses={
+        401: {
+            "detail": "Unauthorised"
+        },
+        403: {
+            "detail": "Permission denied"
+        },
+        404: {
+            "detail": "Product not found"
+        }
+    }
 )
 def remove_product(
     product_id: int,
+    _: User = Depends(get_current_admin),
     db: Session = Depends(get_db)
 ):
     removed = delete_product(db, product_id)

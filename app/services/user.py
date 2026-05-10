@@ -1,14 +1,18 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
 from app.models.user import User
+from app.utils.security import hash_password
 
 
 def create_user(
     db: Session,
     email: str,
-    hashed_password: str,
+    password: str,
 ):
+    hashed_password = hash_password(password)
+
     user = User(
         email=email,
         hashed_password=hashed_password,
