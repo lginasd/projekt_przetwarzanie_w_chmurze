@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 
 from app.models.user import User
-from app.schemas.user import UserRegister, UserRsponse
+from app.schemas.user import UserRegister, UserResponse
 from app.services.auth import get_current_user, get_current_admin
 from app.services.user import create_user, get_user, get_users
 
@@ -19,7 +19,7 @@ router = APIRouter(
 @router.post(
     "/",
     status_code=201,
-    response_model=UserRsponse,
+    response_model=UserResponse,
     responses={
         409: {
             "description": "User is already registered"
@@ -44,7 +44,7 @@ def register_user(
 @router.get(
     "/",
     status_code=200,
-    response_model=list[UserRsponse],
+    response_model=list[UserResponse],
     responses={
         401: {
             "description": "Unauthorized"
@@ -64,7 +64,7 @@ def read_users(
 @router.get(
     "/me",
     status_code=200,
-    response_model=UserRsponse,
+    response_model=UserResponse,
     responses={
         401: {
             "description": "Unauthorized"
@@ -80,7 +80,7 @@ def get_me(
 @router.get(
     "/{user_id}",
     status_code=200,
-    response_model=UserRsponse,
+    response_model=UserResponse,
     responses={
         401: {
             "description": "Unauthorized"

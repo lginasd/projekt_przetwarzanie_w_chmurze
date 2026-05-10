@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.models.order import Order
 from app.models.order_item import OrderItem
+from app.models.user import User
 from app.schemas.order import OrderItemCreate
 from app.services.product import get_product
 
@@ -12,18 +13,6 @@ def create_order(
     user_id: int,
     items: list[OrderItemCreate]
 ):
-    order = Order(user_id=user_id)
-
-    db.add(order)
-    db.commit()
-    db.refresh(order)
-
-    # TODO
-    # 1. check if product exists
-    # 2. ensure that there is at least one product
-    # 3. calculate total
-    # 4. (maybe) apply discount
-
     for item in items:
         product = get_product(db, item.product_id)
 
@@ -39,13 +28,29 @@ def create_order(
                 detail="Not enough stock"
             )
 
+    order = Order(user_id=user_id)
+
+    db.add(order)
+    db.commit()
+    db.refresh(order)
+
+    for item in items:
+        product = get_product(db, item.product_id)
+
         order_item = OrderItem(
             order_id=order.id,
             product_id=item.product_id,
             quantity=item.quantity
         )
 
+        product.quantity -= item.quantity
+
         db.add(order_item)
+        db.flush()
+
+    # TODO
+    # 1. calculate total
+    # 2. (maybe) apply discount
 
     db.commit()
 
@@ -54,6 +59,12 @@ def create_order(
 
 def get_orders(db: Session):
     return db.query(Order).all()
+
+
+def get_user_orders(db: Session, current_user: User):
+    return db.query(Order).filter(
+        Order.user_id == current_user.id
+    ).all()
 
 
 def get_order(

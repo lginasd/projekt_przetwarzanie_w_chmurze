@@ -15,3 +15,5 @@ class OrderResponse(BaseModel):
     user_id: int
     items: list[OrderItemCreate]
 
+    class Config:
+        from_attributes = True

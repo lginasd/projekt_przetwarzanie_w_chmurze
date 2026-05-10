@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
@@ -24,6 +23,7 @@ def create_user(
         db.commit()
         db.refresh(user)
     except IntegrityError:
+        db.rollback()
         return None
 
     return user

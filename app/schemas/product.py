@@ -20,3 +20,4 @@ class ProductResponse(BaseModel):
 class ProductUpdate(BaseModel):
     name: str
     price: float = Field(gt=0)
+    quantity: int = Field(ge=0, default=0)

@@ -23,7 +23,8 @@ oauth2_scheme = OAuth2PasswordBearer(
 
 credentials_exception = HTTPException(
     status_code=401,
-    detail="Invalid authentication credentials"
+    detail="Invalid authentication credentials",
+    headers={"WWW-Authenticate": "Bearer"}
 )
 
 
