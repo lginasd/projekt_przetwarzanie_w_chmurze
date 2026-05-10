@@ -9,7 +9,7 @@ class UserRegister(BaseModel):
 class UserResponse(BaseModel):
     id: int
     email: EmailStr
-    is_admin: bool
+    is_admin: bool = Field(default=False)
 
     class Config:
         from_attributes = True
@@ -22,6 +22,6 @@ class UserUpdate(BaseModel):
 
 
 class UserPatch(BaseModel):
-    new_email: EmailStr|None
-    new_password: str|None = Field(min_length=8)
-    new_is_admin: bool|None = Field(default=False)
+    new_email: EmailStr|None = None
+    new_password: str|None = Field(default=None, min_length=8)
+    new_is_admin: bool|None = None

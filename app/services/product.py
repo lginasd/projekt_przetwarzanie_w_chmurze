@@ -1,5 +1,7 @@
 from decimal import Decimal
 
+from fastapi import HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.models.product import Product
@@ -17,9 +19,16 @@ def create_product(
         quantity=quantity
     )
 
-    db.add(product)
-    db.commit()
-    db.refresh(product)
+    try:
+        db.add(product)
+        db.commit()
+        db.refresh(product)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Product already exists"
+        )
 
     return product
 

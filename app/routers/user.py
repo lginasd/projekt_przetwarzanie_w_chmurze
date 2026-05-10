@@ -7,7 +7,7 @@ from app.database import get_db
 from app.models.user import User
 from app.schemas.user import UserRegister, UserResponse, UserPatch, UserUpdate
 from app.services.auth import get_current_user, get_current_admin
-from app.services.user import create_user, get_user, get_users, update_me, update_user
+from app.services.user import create_user, delete_user, get_user, get_users, update_me, update_user
 
 
 router = APIRouter(
@@ -38,7 +38,7 @@ def register_user(
             detail="User is already registered"
         )
 
-    return user_data
+    return user
 
 
 @router.get(
@@ -169,4 +169,59 @@ def put_user(
             data.password,
             data.is_admin
         )
+    )
+
+
+@router.delete(
+    "/me",
+    status_code=200,
+    response_model=UserResponse,
+    responses={
+        401: {
+            "description": "Unauthorized"
+        },
+        403: {
+            "description": "Permission denied"
+        },
+    }
+)
+def remove_me(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    return delete_user(
+        db,
+        current_user.id,
+        current_user
+    )
+
+
+@router.delete(
+    "/{user_id}",
+    status_code=200,
+    response_model=UserResponse,
+    responses={
+        401: {
+            "description": "Unauthorized"
+        },
+        403: {
+            "description": "Permission denied"
+        },
+        404: {
+            "description": "User not found"
+        },
+        422: {
+            "description": "Invalid data"
+        },
+    }
+)
+def remove_user(
+    user_id: int,
+    current_user: User = Depends(get_current_admin),
+    db: Session = Depends(get_db)
+):
+    return delete_user(
+        db,
+        user_id,
+        current_user
     )

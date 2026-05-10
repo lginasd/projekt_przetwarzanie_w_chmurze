@@ -65,6 +65,9 @@ def read_product(
         },
         404: {
             "detail": "Product not found"
+        },
+        409: {
+            "detail": "Product already exists"
         }
     }
 )
@@ -131,7 +134,7 @@ def edit_product(
         },
         404: {
             "detail": "Product not found"
-        }
+        },
     }
 )
 def remove_product(

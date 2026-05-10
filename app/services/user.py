@@ -127,4 +127,15 @@ def delete_user(
     if user is None:
         raise HTTPException(
             status_code=404
-                )
+        )
+
+    if not current_user.is_admin and current_user.id != user_id:
+        raise HTTPException(
+            status_code=403,
+            detail="Permission denied"
+        )
+
+    db.delete(user)
+    db.commit()
+
+    return user
