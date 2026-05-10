@@ -8,3 +8,10 @@ class OrderItemCreate(BaseModel):
 
 class OrderCreate(BaseModel):
     items: list[OrderItemCreate]
+
+
+class OrderResponse(BaseModel):
+    id: int
+    user_id: int
+    items: list[OrderItemCreate]
+

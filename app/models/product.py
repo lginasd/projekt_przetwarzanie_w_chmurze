@@ -10,6 +10,12 @@ class Product(DataBase):
     name = Column(String, nullable=False)
     price = Column(Float, nullable=False)
 
+    quantity = Column(
+        Integer,
+        nullable=False,
+        default=0
+    )
+
     order_items = relationship(
         "OrderItem",
         back_populates="product"

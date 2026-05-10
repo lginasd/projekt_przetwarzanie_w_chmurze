@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 
-from app.schemas.order import OrderCreate, OrderItemCreate
+from app.schemas.order import OrderCreate, OrderResponse
 from app.services.order import create_order, get_order, get_orders
 
 
@@ -16,7 +16,7 @@ router = APIRouter(
 
 @router.get("/")
 def read_orders(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     return get_orders(db)
 
@@ -28,10 +28,14 @@ def read_order(
     return get_order(db, order_id)
 
 
-@router.post("/")
+@router.post(
+    "/",
+    response_model=OrderResponse,
+    status_code=201
+)
 def place_order(
-    order_items: list[OrderItemCreate],
+    order_items: OrderCreate,
     user_id: int,
     db: Session = Depends(get_db)
 ):
-    return create_order(db, user_id, order_items)
+    return create_order(db, user_id, order_items.items)

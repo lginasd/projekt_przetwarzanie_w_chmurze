@@ -3,10 +3,16 @@ from sqlalchemy.orm import Session
 from app.models.product import Product
 
 
-def create_product(db: Session, name: str, price: float):
+def create_product(
+    db: Session,
+    name: str,
+    price: float,
+    quantity: int
+):
     product = Product(
         name=name,
-        price=price
+        price=price,
+        quantity=quantity
     )
 
     db.add(product)

@@ -49,7 +49,8 @@ def add_product(
     return create_product(
         db,
         product.name,
-        product.price
+        product.price,
+        product.quantity
     )
 
 

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 
-from app.schemas.user import UserCreate
+from app.schemas.user import UserCreate, UserRsponse
 from app.services.user import create_user, get_user, get_users
 
 
@@ -16,7 +16,7 @@ router = APIRouter(
 
 @router.post(
     "/",
-    response_model=UserCreate,
+    response_model=UserRsponse,
     status_code=201
 )
 def register_user(
