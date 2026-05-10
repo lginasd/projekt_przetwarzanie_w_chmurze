@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from app.models.user import User
 
@@ -7,17 +8,19 @@ def create_user(
     db: Session,
     email: str,
     hashed_password: str,
-    is_admin: bool
 ):
     user = User(
         email=email,
         hashed_password=hashed_password,
-        is_admin=is_admin
+        is_admin=False
     )
 
-    db.add(user)
-    db.commit()
-    db.refresh(user)
+    try:
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    except IntegrityError:
+        return None
 
     return user
 
