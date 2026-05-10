@@ -65,10 +65,21 @@ def update_product(
 
 def delete_product(db: Session, product_id: int):
     product = get_product(db, product_id)
-    if product is None:
-        return None
 
-    db.delete(product)
-    db.commit()
+    if product is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found"
+        )
+
+    try:
+        db.delete(product)
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Product is contained in one or many orders"
+        )
 
     return product

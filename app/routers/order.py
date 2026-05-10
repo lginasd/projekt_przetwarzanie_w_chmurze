@@ -6,7 +6,7 @@ from app.database import get_db
 from app.models.user import User
 from app.schemas.order import OrderCreate, OrderPatchStatus, OrderResponse
 from app.services.auth import get_current_admin, get_current_user
-from app.services.order import change_order_status, create_order, get_order, get_orders, get_user_orders, remove_order
+from app.services.order import change_order_status, create_order, get_order, get_orders, get_user_orders, delete_order
 
 
 router = APIRouter(
@@ -65,7 +65,6 @@ def read_order(
         )
 
     return order
-
 
 
 @router.post(
@@ -139,12 +138,12 @@ def patch_order_status(
         }
     },
 )
-def delete_order(
+def remove_order(
     order_id: int,
     db: Session = Depends(get_db),
     _: User = Depends(get_current_admin)
 ):
-    return remove_order(
+    return delete_order(
         db,
         order_id
     )

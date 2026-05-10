@@ -124,7 +124,8 @@ def edit_product(
 
 @router.delete(
     "/{product_id}",
-    status_code=204,
+    status_code=200,
+    response_model=ProductResponse,
     responses={
         401: {
             "detail": "Unauthorised"
@@ -135,6 +136,9 @@ def edit_product(
         404: {
             "detail": "Product not found"
         },
+        409: {
+            "detail": "Product is contained in one or many orders"
+        },
     }
 )
 def remove_product(
@@ -142,12 +146,4 @@ def remove_product(
     _: User = Depends(get_current_admin),
     db: Session = Depends(get_db)
 ):
-    removed = delete_product(db, product_id)
-    if removed is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Product not found"
-        )
-
-    return None
-
+    return delete_product(db, product_id)

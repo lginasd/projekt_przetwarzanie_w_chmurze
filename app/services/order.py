@@ -120,7 +120,7 @@ def change_order_status(
     return order
 
 
-def remove_order(
+def delete_order(
     db: Session,
     order_id: int,
 ):
