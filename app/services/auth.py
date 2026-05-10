@@ -21,17 +21,17 @@ oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/auth/login"
 )
 
-credentials_exception = HTTPException(
-    status_code=401,
-    detail="Invalid authentication credentials",
-    headers={"WWW-Authenticate": "Bearer"}
-)
-
 
 def login_and_give_token(
     form_data: OAuth2PasswordRequestForm,
     db: Session
 ):
+    credentials_exception = HTTPException(
+        status_code=401,
+        detail="Invalid authentication credentials",
+        headers={"WWW-Authenticate": "Bearer"}
+    )
+
     user = db.query(User).filter(
         User.email == form_data.username
     ).first()
