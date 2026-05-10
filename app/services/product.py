@@ -57,8 +57,15 @@ def update_product(
     product.name = name
     product.price = price
 
-    db.commit()
-    db.refresh(product)
+    try:
+        db.commit()
+        db.refresh(product)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Product with this name already exists"
+        )
 
     return product
 

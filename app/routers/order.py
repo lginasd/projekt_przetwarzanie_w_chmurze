@@ -26,9 +26,6 @@ router = APIRouter(
         403: {
             "description": "Permission denied"
         },
-        404: {
-            "description": "Order not found"
-        }
     }
 )
 def read_orders(

@@ -63,9 +63,6 @@ def read_product(
         403: {
             "detail": "Permission denied"
         },
-        404: {
-            "detail": "Product not found"
-        },
         409: {
             "detail": "Product already exists"
         }

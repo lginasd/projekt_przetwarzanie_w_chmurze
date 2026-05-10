@@ -24,4 +24,3 @@ class UserUpdate(BaseModel):
 class UserPatch(BaseModel):
     new_email: EmailStr|None = None
     new_password: str|None = Field(default=None, min_length=8)
-    new_is_admin: bool|None = None
