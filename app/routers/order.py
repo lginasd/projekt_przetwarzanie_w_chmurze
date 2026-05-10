@@ -141,6 +141,9 @@ def patch_order_status(
         },
         404: {
             "description": "Order not found"
+        },
+        422: {
+            "description": "Invalid data"
         }
     },
 )

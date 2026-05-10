@@ -1,4 +1,5 @@
 from fastapi.exceptions import HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.models.order import Order
@@ -131,11 +132,29 @@ def delete_order(
             detail="Order not found"
         )
 
+    if order.status == OrderStatus.COMPLETED:
+        raise HTTPException(
+            status_code=422,
+            detail="Completed orders cannot be deleted"
+        )
+
     # Order.total is lazy-calculated, only when needed
     # and cannot be calculated after deleting the order.
     order_response = OrderResponse.model_validate(order)
+    order_items = order.items
 
-    db.delete(order)
-    db.commit()
+    try:
+        # restock
+        for item in order_items:
+            item.product.quantity += item.quantity
+
+        db.delete(order)
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Failed to delete order"
+        )
 
     return order_response
