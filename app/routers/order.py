@@ -4,9 +4,9 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 
 from app.models.user import User
-from app.schemas.order import OrderCreate, OrderResponse
+from app.schemas.order import OrderCreate, OrderPatchStatus, OrderResponse
 from app.services.auth import get_current_user
-from app.services.order import create_order, get_order, get_orders, get_user_orders
+from app.services.order import change_order_status, create_order, get_order, get_orders, get_user_orders
 
 
 router = APIRouter(
@@ -49,10 +49,14 @@ def read_orders(
 )
 def read_order(
     order_id: int,
-    _: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    order = get_order(db, order_id)
+    order = get_order(
+        db,
+        order_id,
+        current_user
+    )
 
     if order is None:
         raise HTTPException(
@@ -77,11 +81,43 @@ def read_order(
 def place_order(
     order_items: OrderCreate,
     current_user: User = Depends(get_current_user),
-    _: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     return create_order(
         db,
         current_user.id,
         order_items.items
+    )
+
+
+@router.patch(
+    "/{order_id}",
+    status_code=200,
+    response_model=OrderResponse,
+    responses={
+        401: {
+            "detail": "Unauthorized"
+        },
+        403: {
+            "detail": "Access denied"
+        },
+        404: {
+            "detail": "Order not found"
+        },
+        422: {
+            "detail": "Invalid operation"
+        }
+    }
+)
+def patch_order_status(
+    order_id: int,
+    order_status: OrderPatchStatus,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    return change_order_status(
+        db,
+        order_id,
+        order_status.status,
+        current_user
     )

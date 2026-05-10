@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.models.order import Order
 from app.models.order_item import OrderItem
+from app.models.order_status import OrderStatus
 from app.models.user import User
 from app.schemas.order import OrderItemCreate
 from app.services.product import get_product
@@ -72,8 +73,49 @@ def get_user_orders(db: Session, current_user: User):
 
 def get_order(
     db: Session,
-    order_id: int
+    order_id: int,
+    current_user: User
 ):
-    return db.query(Order).filter(
+    order = db.query(Order).filter(
         Order.id == order_id
     ).first()
+
+    if order is None:
+        return None
+
+    if not current_user.is_admin and order.user_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="Permission denied"
+        )
+
+    return order
+
+
+def change_order_status(
+    db: Session,
+    order_id: int,
+    order_status: OrderStatus,
+    current_user: User
+):
+    order = get_order(db, order_id, current_user)
+
+    if order is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Order not found"
+        )
+
+    if not order.status == OrderStatus.PENDING:
+        raise HTTPException(
+            status_code=422,
+            detail="Operation is not permitted with current order status"
+        )
+
+    order.status = order_status
+
+    db.add(order)
+    db.commit()
+    db.refresh(order)
+
+    return order
