@@ -125,7 +125,8 @@ def patch_order_status(
 
 @router.delete(
     "/{order_id}",
-    status_code=204,
+    status_code=200,
+    response_model=OrderResponse,
     responses={
         401: {
             "description": "Unauthorized"
@@ -143,9 +144,7 @@ def delete_order(
     db: Session = Depends(get_db),
     _: User = Depends(get_current_admin)
 ):
-    remove_order(
+    return remove_order(
         db,
         order_id
     )
-
-    return None

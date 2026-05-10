@@ -7,9 +7,15 @@ class OrderItemCreate(BaseModel):
     product_id: int
     quantity: int = Field(gt=0)
 
+    class Config:
+        from_attributes = True
+
 
 class OrderCreate(BaseModel):
     items: list[OrderItemCreate]
+
+    class Config:
+        from_attributes = True
 
 
 class OrderResponse(BaseModel):

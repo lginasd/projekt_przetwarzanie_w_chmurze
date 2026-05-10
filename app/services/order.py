@@ -5,7 +5,7 @@ from app.models.order import Order
 from app.models.order_item import OrderItem
 from app.models.order_status import OrderStatus
 from app.models.user import User
-from app.schemas.order import OrderItemCreate
+from app.schemas.order import OrderItemCreate, OrderResponse
 from app.services.product import get_product
 
 
@@ -54,7 +54,6 @@ def create_order(
 
     # TODO
     # 1. calculate total
-    # 2. (maybe) apply discount
 
     db.commit()
 
@@ -138,4 +137,4 @@ def remove_order(
     db.delete(order)
     db.commit()
 
-    return
+    return order
