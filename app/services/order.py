@@ -119,3 +119,23 @@ def change_order_status(
     db.refresh(order)
 
     return order
+
+
+def remove_order(
+    db: Session,
+    order_id: int,
+):
+    order = db.query(Order).filter(
+        Order.id == order_id
+    ).first()
+
+    if order is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Order not found"
+        )
+
+    db.delete(order)
+    db.commit()
+
+    return

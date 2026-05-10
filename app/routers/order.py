@@ -5,8 +5,8 @@ from app.database import get_db
 
 from app.models.user import User
 from app.schemas.order import OrderCreate, OrderPatchStatus, OrderResponse
-from app.services.auth import get_current_user
-from app.services.order import change_order_status, create_order, get_order, get_orders, get_user_orders
+from app.services.auth import get_current_admin, get_current_user
+from app.services.order import change_order_status, create_order, get_order, get_orders, get_user_orders, remove_order
 
 
 router = APIRouter(
@@ -121,3 +121,31 @@ def patch_order_status(
         order_status.status,
         current_user
     )
+
+
+@router.delete(
+    "/{order_id}",
+    status_code=204,
+    responses={
+        401: {
+            "description": "Unauthorized"
+        },
+        403: {
+            "description": "Permission denied"
+        },
+        404: {
+            "description": "Order not found"
+        }
+    },
+)
+def delete_order(
+    order_id: int,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_admin)
+):
+    remove_order(
+        db,
+        order_id
+    )
+
+    return None
