@@ -1,3 +1,4 @@
+from decimal import Decimal
 from sqlalchemy import ForeignKey
 from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.orm import relationship, Mapped, mapped_column
@@ -26,6 +27,18 @@ class Order(DataBase):
         default=OrderStatus.PENDING,
         nullable=False
     )
+
+
+    @property
+    def total(self) -> Decimal:
+        return sum(
+            (
+                item.product.price * item.quantity
+                for item in self.items
+                if item.product
+            ),
+            start=Decimal("0")
+        )
 
 
     user: Mapped["User"] = relationship(

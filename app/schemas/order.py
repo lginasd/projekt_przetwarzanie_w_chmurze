@@ -1,3 +1,4 @@
+from decimal import Decimal
 from pydantic import BaseModel, Field
 
 from app.models.order_status import OrderStatus
@@ -23,6 +24,7 @@ class OrderResponse(BaseModel):
     user_id: int
     items: list[OrderItemCreate]
     status: OrderStatus
+    total: Decimal = Field(examples=[970.42])
 
     class Config:
         from_attributes = True

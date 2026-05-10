@@ -52,9 +52,6 @@ def create_order(
         db.add(order_item)
         db.flush()
 
-    # TODO
-    # 1. calculate total
-
     db.commit()
 
     return order
@@ -134,7 +131,11 @@ def delete_order(
             detail="Order not found"
         )
 
+    # Order.total is lazy-calculated, only when needed
+    # and cannot be calculated after deleting the order.
+    order_response = OrderResponse.model_validate(order)
+
     db.delete(order)
     db.commit()
 
-    return order
+    return order_response
