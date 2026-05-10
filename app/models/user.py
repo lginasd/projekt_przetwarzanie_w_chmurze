@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import relationship, Mapped, mapped_column
-from sqlalchemy.orm import relationship
 
 from app.database import DataBase
 
@@ -13,7 +12,8 @@ class User(DataBase):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(
-        primary_key=True
+        primary_key=True,
+        index=True
     )
 
     email: Mapped[str] = mapped_column(

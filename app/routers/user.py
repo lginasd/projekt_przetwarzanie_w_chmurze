@@ -5,9 +5,9 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 
 from app.models.user import User
-from app.schemas.user import UserRegister, UserResponse
+from app.schemas.user import UserRegister, UserResponse, UserPatch, UserUpdate
 from app.services.auth import get_current_user, get_current_admin
-from app.services.user import create_user, get_user, get_users
+from app.services.user import create_user, get_user, get_users, update_me, update_user
 
 
 router = APIRouter(
@@ -27,10 +27,10 @@ router = APIRouter(
     }
 )
 def register_user(
-    user: UserRegister,
+    user_data: UserRegister,
     db: Session = Depends(get_db),
 ):
-    user = create_user(db, user.email, user.password)
+    user = create_user(db, user_data.email, user_data.password)
 
     if user is None:
         raise HTTPException(
@@ -38,7 +38,7 @@ def register_user(
             detail="User is already registered"
         )
 
-    return user
+    return user_data
 
 
 @router.get(
@@ -107,3 +107,66 @@ def read_user(
         )
 
     return user
+
+
+@router.patch(
+    "/me",
+    status_code=200,
+    response_model=UserResponse,
+    responses={
+        401: {
+            "description": "Unauthorized"
+        },
+        422: {
+            "description": "Invalid data"
+        },
+    }
+)
+def patch_me(
+    data: UserPatch,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    return update_me(
+        db,
+        current_user.id,
+        data.new_email,
+        data.new_password
+    )
+
+
+@router.put(
+    "/{user_id}",
+    status_code=200,
+    response_model=UserResponse,
+    responses={
+        401: {
+            "description": "Unauthorized"
+        },
+        403: {
+            "description": "Permission denied"
+        },
+        404: {
+            "description": "User not found"
+        },
+        422: {
+            "description": "Invalid data"
+        },
+    }
+)
+def put_user(
+    user_id: int,
+    data: UserUpdate,
+    current_user: User = Depends(get_current_admin),
+    db: Session = Depends(get_db)
+):
+    return UserResponse.model_validate(
+        update_user(
+            db,
+            user_id,
+            current_user,
+            data.email,
+            data.password,
+            data.is_admin
+        )
+    )
