@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Integer, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from app.database import DataBase
 
@@ -7,31 +7,31 @@ from app.database import DataBase
 class OrderItem(DataBase):
     __tablename__ = "order_items"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        index=True
+    )
 
-    order_id = Column(
-        Integer,
+    order_id: Mapped[int] = mapped_column(
         ForeignKey("orders.id"),
         nullable=False
     )
 
-    product_id = Column(
-        Integer,
+    product_id: Mapped[int] = mapped_column(
         ForeignKey("products.id"),
         nullable=False
     )
 
-    quantity = Column(
-        Integer,
+    quantity: Mapped[int] = mapped_column(
         nullable=False
     )
 
-    order = relationship(
-        "Order",
+
+    order: Mapped[int] = relationship(
         back_populates="items"
     )
 
-    product = relationship(
+    product: Mapped[int] = relationship(
         "Product",
         back_populates="order_items"
     )

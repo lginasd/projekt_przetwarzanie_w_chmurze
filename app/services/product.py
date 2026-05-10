@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from sqlalchemy.orm import Session
 
 from app.models.product import Product
@@ -6,7 +8,7 @@ from app.models.product import Product
 def create_product(
     db: Session,
     name: str,
-    price: float,
+    price: Decimal,
     quantity: int
 ):
     product = Product(
@@ -36,7 +38,7 @@ def update_product(
     db: Session,
     product_id: int,
     name: str,
-    price: float
+    price: Decimal
 ):
     product = get_product(db, product_id)
 

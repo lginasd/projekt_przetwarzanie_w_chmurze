@@ -1,26 +1,30 @@
-from sqlalchemy import Column, Integer, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from app.database import DataBase
+from app.models.order_item import OrderItem
+from app.models.user import User
+
 
 class Order(DataBase):
     __tablename__ = "orders"
 
-    id = Column(Integer, primary_key=True, index=True)
-
-    user_id = Column(
-            Integer,
-            ForeignKey("users.id"),
-            nullable=False
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        index=True
     )
 
-    user = relationship(
-        "User",
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"),
+        nullable=False
+    )
+
+
+    user: Mapped["User"] = relationship(
         back_populates="orders"
     )
 
-    items = relationship(
-        "OrderItem",
+    items: Mapped[list["OrderItem"]] = relationship(
         back_populates="order",
         cascade="all, delete"
     )

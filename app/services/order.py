@@ -43,6 +43,9 @@ def create_order(
             quantity=item.quantity
         )
 
+        if product is None:
+            raise ValueError("Product was removed after checking")
+
         product.quantity -= item.quantity
 
         db.add(order_item)
