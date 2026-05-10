@@ -21,7 +21,7 @@ router = APIRouter(
     response_model=list[OrderResponse],
     responses= {
         401: {
-            "detail": "Unauthorized"
+            "description": "Unauthorized"
         },
         403: {
             "description": "Permission denied"
@@ -43,13 +43,13 @@ def read_orders(
     response_model=OrderResponse,
     responses= {
         401: {
-            "detail": "Unauthorized"
+            "description": "Unauthorized"
         },
         403: {
-            "detail": "Access denied"
+            "description": "Access denied"
         },
         404: {
-            "detail": "Order does not exist"
+            "description": "Order does not exist"
         }
     }
 )
@@ -79,10 +79,10 @@ def read_order(
     response_model=OrderResponse,
     responses={
         401: {
-            "detail": "Unauthorized"
+            "description": "Unauthorized"
         },
         403: {
-            "detail": "Access denied"
+            "description": "Access denied"
         },
     }
 )
@@ -104,13 +104,13 @@ def place_order(
     response_model=OrderResponse,
     responses={
         401: {
-            "detail": "Unauthorized"
+            "description": "Unauthorized"
         },
         403: {
-            "detail": "Access denied"
+            "description": "Access denied"
         },
         404: {
-            "detail": "Order not found"
+            "description": "Order not found"
         }
     }
 )

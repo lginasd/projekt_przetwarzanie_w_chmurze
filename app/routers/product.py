@@ -58,13 +58,13 @@ def read_product(
     status_code=201,
     responses={
         401: {
-            "detail": "Unauthorised"
+            "description": "Unauthorised"
         },
         403: {
-            "detail": "Permission denied"
+            "description": "Permission denied"
         },
         409: {
-            "detail": "Product already exists"
+            "description": "Product already exists"
         }
     }
 )
@@ -87,13 +87,13 @@ def add_product(
     response_model=ProductResponse,
     responses={
         401: {
-            "detail": "Unauthorised"
+            "description": "Unauthorised"
         },
         403: {
-            "detail": "Permission denied"
+            "description": "Permission denied"
         },
         404: {
-            "detail": "Product not found"
+            "description": "Product not found"
         }
     }
 )
@@ -125,16 +125,16 @@ def edit_product(
     response_model=ProductResponse,
     responses={
         401: {
-            "detail": "Unauthorised"
+            "description": "Unauthorised"
         },
         403: {
-            "detail": "Permission denied"
+            "description": "Permission denied"
         },
         404: {
-            "detail": "Product not found"
+            "description": "Product not found"
         },
         409: {
-            "detail": "Product is contained in one or many orders"
+            "description": "Product is contained in one or many orders"
         },
     }
 )
