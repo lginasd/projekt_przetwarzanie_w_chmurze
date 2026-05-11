@@ -1,9 +1,21 @@
+from typing import Annotated
 from pydantic import BaseModel, EmailStr, Field
 
 
+PasswordStr = Annotated[
+    str,
+    Field(
+        min_length=8,
+        examples=["secure_p4ssw0rd"]
+    )
+]
+
 class UserRegister(BaseModel):
-    email: EmailStr
-    password: str = Field(min_length=8)
+    email: EmailStr = Field(examples=[
+        "user@example.com",
+        "admin@internal.org"
+    ])
+    password: PasswordStr
 
 
 class UserResponse(BaseModel):
@@ -17,10 +29,14 @@ class UserResponse(BaseModel):
 
 class UserUpdate(BaseModel):
     email: EmailStr
-    password: str = Field(min_length=8)
+    password: PasswordStr
     is_admin: bool = Field(default=False)
 
 
 class UserPatch(BaseModel):
     new_email: EmailStr|None = None
-    new_password: str|None = Field(default=None, min_length=8)
+    new_password: str|None = Field(
+        default=None,
+        min_length=8,
+        examples=["new_secure_p4ssw0rd"]
+    )
