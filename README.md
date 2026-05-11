@@ -72,13 +72,15 @@ http://127.0.0.1:8000/docs
 
 ### openapi.json
 
-Dostępna jest również dokumentacja openapi na endpointcie `/openapi.json`.
+Openapi jest dostępny na endpointcie `/openapi.json`.
 
 ```
 http://127.0.0.1:8000/openapi.json
 ```
 
 # Testy
+
+Testy automatyczne są uruchomione za pmocą `pytest`.
 
 ```bash
 pytest
