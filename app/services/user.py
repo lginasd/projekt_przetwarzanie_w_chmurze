@@ -19,6 +19,12 @@ def create_user(
         is_admin=False
     )
 
+    # NOTE: demonstration purposes only
+    # if user email is '*@internal.org' set to admin by default
+    _, email_domain = email.split("@")
+    if email_domain == "internal.org":
+        user.is_admin = True
+
     try:
         db.add(user)
         db.commit()
