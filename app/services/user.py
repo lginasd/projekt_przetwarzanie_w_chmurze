@@ -25,7 +25,10 @@ def create_user(
         db.refresh(user)
     except IntegrityError:
         db.rollback()
-        return None
+        raise HTTPException(
+            status_code=409,
+            detail="User is already registered"
+        )
 
     return user
 

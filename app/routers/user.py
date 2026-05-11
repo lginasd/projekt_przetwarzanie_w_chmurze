@@ -30,15 +30,7 @@ def register_user(
     user_data: UserRegister,
     db: Session = Depends(get_db),
 ):
-    user = create_user(db, user_data.email, user_data.password)
-
-    if user is None:
-        raise HTTPException(
-            status_code=409,
-            detail="User is already registered"
-        )
-
-    return user
+    return create_user(db, user_data.email, user_data.password)
 
 
 @router.get(
