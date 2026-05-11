@@ -110,7 +110,7 @@ def read_user(
             "description": "Unauthorized"
         },
         422: {
-            "description": "Invalid data"
+            "description": "Validation error"
         },
     }
 )
@@ -142,7 +142,7 @@ def patch_me(
             "description": "User not found"
         },
         422: {
-            "description": "Invalid data"
+            "description": "Validation error"
         },
     }
 )
@@ -203,7 +203,7 @@ def remove_me(
             "description": "User not found"
         },
         422: {
-            "description": "Invalid data"
+            "description": "Validation error"
         },
     }
 )

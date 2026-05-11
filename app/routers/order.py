@@ -143,7 +143,7 @@ def patch_order_status(
             "description": "Order not found"
         },
         422: {
-            "description": "Invalid data"
+            "description": "Validation error"
         }
     },
 )
