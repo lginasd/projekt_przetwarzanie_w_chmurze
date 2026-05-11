@@ -4,10 +4,10 @@ REST API dla prostego sklepu internetowego stworzony za pomocą FastAPI.
 
 ## Funkcjonalności
 
-- rejestracja użytkowników
+- rejestracja i usunięcie użytkowników
 - logowanie JWT
 - role użytkowników (admin/user)
-- CRUD produktów
+- CRUD dla wszystkich encji
 - składanie zamówień
 - walidacja danych
 - autoryzacja endpointówtAPI.
