@@ -1,7 +1,7 @@
 from decimal import Decimal
 from pydantic import BaseModel, Field
 
-from app.models.order_status import OrderStatus
+from app.models.order import OrderStatus
 
 
 class OrderItemCreate(BaseModel):

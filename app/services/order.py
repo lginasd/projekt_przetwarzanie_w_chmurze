@@ -2,9 +2,8 @@ from fastapi.exceptions import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.models.order import Order
+from app.models.order import Order, OrderStatus
 from app.models.order_item import OrderItem
-from app.models.order_status import OrderStatus
 from app.models.user import User
 from app.schemas.order import OrderItemCreate, OrderResponse
 from app.services.product import get_product

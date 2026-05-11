@@ -1,4 +1,5 @@
 from decimal import Decimal
+from enum import Enum
 from sqlalchemy import ForeignKey
 from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.orm import relationship, Mapped, mapped_column
@@ -6,7 +7,12 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 from app.database import DataBase
 from app.models.order_item import OrderItem
 from app.models.user import User
-from app.models.order_status import OrderStatus
+
+
+class OrderStatus(str, Enum):
+    PENDING = "pending"
+    CANCELLED = "cancelled"
+    COMPLETED = "completed"
 
 
 class Order(DataBase):
