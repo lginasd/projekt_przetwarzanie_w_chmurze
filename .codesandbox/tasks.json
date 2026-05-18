@@ -1,0 +1,38 @@
+{
+  // These tasks will run in order when initializing your CodeSandbox project.
+  "setupTasks": [
+    {
+      "command": "pip install fastapi \"uvicorn[standard]\"",
+      "name": "install FastAPI"
+    },
+    {
+      "command": "pip install -r requirements.txt",
+      "name": "install requirements"
+    },
+    {
+      "command": "cp .env.example .env",
+      "name": "generate .env from example"
+    }
+  ],
+
+  // These tasks can be run from CodeSandbox. Running one will open a log in the app.
+  "tasks": {
+    "start": {
+      "name": "start",
+      "command": "uvicorn app.main:app --reload",
+      "runAtStart": true,
+      "preview": {
+        "port": 8000
+      }
+    },
+    "install-dependencies": {
+      "name": "Install Dependencies",
+      "command": "pip install -r requirements.txt",
+      "restartOn": {
+        "files": ["requirements.txt"],
+        "branch": false,
+        "resume": false
+      }
+    }
+  }
+}
